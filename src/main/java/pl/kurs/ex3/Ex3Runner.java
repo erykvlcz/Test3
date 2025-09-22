@@ -2,7 +2,7 @@ package pl.kurs.ex3;
 
 import java.util.List;
 
-public class Runner {
+public class Ex3Runner {
     public static void main(String[] args) {
         List<Integer> numbers = List.of(5, 2, 9, 1, 7);
         List<String> words = List.of("Coraz", "blizej", "swieta!", "Jesieniary", "kebs");

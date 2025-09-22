@@ -6,7 +6,7 @@ import pl.kurs.ex1.models.extendsClothes.*;
 import java.math.BigDecimal;
 import java.util.Collections;
 
-public class Runner {
+public class Ex1Runner {
     public static void main(String[] args) {
         Wardrobe wardrobe = new Wardrobe();
         wardrobe.addClothes(
