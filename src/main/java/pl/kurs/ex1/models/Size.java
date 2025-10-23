@@ -2,7 +2,7 @@ package pl.kurs.ex1.models;
 
 import java.util.Comparator;
 
-public enum Size implements Comparator<Clothes> {
+public enum Size {
     L(3), M(2), S(1), XL(4);
 
     private final int priority;
@@ -20,10 +20,5 @@ public enum Size implements Comparator<Clothes> {
         return "Size{" +
                 "priority=" + priority +
                 '}';
-    }
-
-    @Override
-    public int compare(Clothes o1, Clothes o2) {
-        return 0;
     }
 }

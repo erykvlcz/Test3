@@ -12,12 +12,19 @@ public class  MinMax<T extends Comparable<T>>{
         this.max = max;
     }
 
+    public T getMin() {
+        return min;
+    }
+
+    public T getMax() {
+        return max;
+    }
+
     public static <T extends Comparable<T>> MinMax<T> createMinMax(List<T> list){
         if(list.isEmpty()){
-            return null;
+            throw new IllegalArgumentException("MinMax can not be empty");
         }
-        return new MinMax<>(getMin(list), getMax(list)
-        );
+        return new MinMax<>(getMin(list), getMax(list));
     }
 
     private static <T extends Comparable<T>> T getMax(List<T> list) {

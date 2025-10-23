@@ -6,70 +6,54 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Ex2Runner {
     public static void main(String[] args) throws IOException {
-        List<File> myJavaFiles = new ArrayList<>();
         String myDirectory = "C:\\Users\\kowal\\Desktop\\projekty";
         String yourDirectory = "";
-        findJavaFiles(new File(myDirectory),myJavaFiles);
-        sortFilesByDayOfWeek(myJavaFiles);
 
+        List<File> myJavaFiles = new ArrayList<>();
+        findJavaFiles(new File(myDirectory),myJavaFiles);
+        myJavaFiles.stream()
+                .map(f -> getCreationDayOfWeekFromFile(f))
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(e -> System.out.println(e.getKey() + " -> " + e.getValue()));
         System.out.println("Files number = " + myJavaFiles.size());
 
-//MONDAY -> 90
-//TUESDAY -> 106
-//WEDNESDAY -> 203 //<- zajęcia ze słoniem
-//THURSDAY -> 110
-//FRIDAY -> 85
-//SATURDAY -> 173
-//SUNDAY -> 209
-//Files number = 976
+//        MONDAY=92
+//        TUESDAY=114
+//        WEDNESDAY=210 <- zajęcia ze Słoniem
+//        THURSDAY=119
+//        FRIDAY=88
+//        SATURDAY=183
+//        SUNDAY=223
+//        Files number = 1029
 
     }
 
-    private static void sortFilesByDayOfWeek(List<File> myJavaFiles) {
-        Map<DayOfWeek, Integer> dayCounterMap = new LinkedHashMap<>();
-        for (DayOfWeek value : DayOfWeek.values()) {
-            dayCounterMap.put(value, 0);
-        }
 
-        groupAndAddDaysToMap(myJavaFiles, dayCounterMap);
 
-        Set<Map.Entry<DayOfWeek, Integer>> entrySet = dayCounterMap.entrySet();
-        try (
-                BufferedWriter bw = new BufferedWriter(new FileWriter("summary.txt"));
-        ) {
-        for (Map.Entry<DayOfWeek, Integer> e : entrySet) {
-            String line = e.getKey() + " -> " + e.getValue();
-            System.out.println(line);
-            bw.write(line);
-            bw.newLine();
-        }
-        bw.write("Files number = " + myJavaFiles.size());
+    private static DayOfWeek getCreationDayOfWeekFromFile(File file){
+        DayOfWeek dayOfWeek = null;
+        try {
+            BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getPath()), BasicFileAttributes.class);
+            LocalDateTime convertedFileTime = LocalDateTime.ofInstant(attr.creationTime().toInstant(), ZoneId.systemDefault());
+            dayOfWeek = convertedFileTime.getDayOfWeek();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
-    }
+        return dayOfWeek;
 
-    private static void groupAndAddDaysToMap(List<File> myJavaFiles, Map<DayOfWeek, Integer> dayCounterMap) {
-        for (File myFile : myJavaFiles) {
-            Path path = myFile.toPath();
-            BasicFileAttributes basicFileAttributes = null;
-            try {
-                basicFileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            FileTime creationTime = basicFileAttributes.creationTime();
-            LocalDate date = creationTime.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            DayOfWeek dayOfWeek = date.getDayOfWeek();
-            dayCounterMap.put(dayOfWeek,dayCounterMap.get(dayOfWeek) + 1);
-        }
     }
 
     static void findJavaFiles(File directory, List<File> files){

@@ -5,6 +5,7 @@ import pl.kurs.ex1.models.extendsClothes.*;
 
 import java.math.BigDecimal;
 import java.util.Collections;
+import java.util.List;
 
 public class Ex1Runner {
     public static void main(String[] args) {
@@ -18,17 +19,20 @@ public class Ex1Runner {
                 new TShirt("Adidas 3paski", Size.L, BigDecimal.valueOf(286.99))
         );
 
+        //wardrobe.appendClothesFromFile();
+
         wardrobe.addClothes(new Socks("Różowe skarpetki", Size.M, BigDecimal.valueOf(14.99)));
         wardrobe.addClothes(
                 new Socks("Czarne bokserki", Size.M, BigDecimal.valueOf(9.99)),
                 new Skirt("Góralska spódnica", Size.S, BigDecimal.valueOf(78.80))
         );
 
-        Clothes biggestClothes = Collections.max(wardrobe.getClothes());
-        Clothes.setClothesComparator(Clothes.CLOTHES_PRICE_COMPARATOR);
-        Clothes mostExpensiveClothes = Collections.max(wardrobe.getClothes());
+        List<Clothing> clothingList = wardrobe.getClothes();
+        Clothing biggestClothing = Collections.max(wardrobe.getClothes());
+        Clothing.setClothesComparator(SortingCriterion.MOST_EXPENSIVE_CLOTHES);
+        Clothing mostExpensiveClothing = Collections.max(wardrobe.getClothes());
 
-//        wardrobe.saveWardrobeClothesToFile();
-//        wardrobe.loadWardrobeClothesFromFile("wardrobe.clothes");
+        //wardrobe.saveWardrobeClothesToFile();
+
     }
 }
