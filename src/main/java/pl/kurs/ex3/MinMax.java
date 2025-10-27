@@ -2,6 +2,7 @@ package pl.kurs.ex3;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class  MinMax<T extends Comparable<T>>{
     private T min;
@@ -21,9 +22,13 @@ public class  MinMax<T extends Comparable<T>>{
     }
 
     public static <T extends Comparable<T>> MinMax<T> createMinMax(List<T> list){
-        if(list.isEmpty()){
-            throw new IllegalArgumentException("MinMax can not be empty");
+        if (list == null || list.isEmpty()) {
+            throw new IllegalArgumentException("List cannot be null or empty");
         }
+        if(list.stream().anyMatch(x -> x == null)) {
+            throw new IllegalArgumentException("MinMax can not be null");
+        }
+
         return new MinMax<>(getMin(list), getMax(list));
     }
 
